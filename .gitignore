@@ -1,0 +1,8 @@
+*~
+\#*\#
+.\#*
+bin/
+*.swp
+cover.out
+*.tar.gz
+/CHECKSUMS.sha256sum
