@@ -14,6 +14,7 @@ install: bin/gotmpl
 release: bin/gotmpl
 	sha256sum bin/gotmpl > CHECKSUMS.sha256sum
 	tar -czf gotmpl-$(shell go env GOOS)-$(shell go env GOARCH)-$(VERSION).tar.gz --exclude-vcs --owner=0 --group=0 --transform 's|^|gotmpl-$(VERSION)/|' *.go LICENSE README.md Makefile go.mod go.sum CHECKSUMS.* bin/gotmpl
+	sha256sum gotmpl-$(shell go env GOOS)-$(shell go env GOARCH)-$(VERSION).tar.gz > CHECKSUMS.sha256sum
 
 
 bin:
