@@ -8,8 +8,8 @@ clean:
 	rm -rf bin
 	rm -f gotmpl-$(shell go env GOOS)-$(shell go env GOARCH)-$(VERSION).tar.gz
 
-install: bin/gotmpl
-	sudo install bin/gotmpl /usr/local/bin/
+install:
+	install bin/gotmpl /usr/local/bin/
 
 release: bin/gotmpl
 	sha256sum bin/gotmpl > CHECKSUMS.sha256sum

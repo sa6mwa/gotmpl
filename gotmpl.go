@@ -10,6 +10,7 @@ import (
 	"reflect"
 	"strings"
 	"text/template"
+	"time"
 
 	"github.com/Masterminds/sprig/v3"
 	"github.com/alessio/shellescape"
@@ -21,6 +22,28 @@ var additionalFunctions template.FuncMap = template.FuncMap{
 	"shellescape": func(cmd string) string {
 		return shellescape.Quote(cmd)
 	},
+	"time": func() interface{} {
+		return &TimeFuncs{
+			ANSIC:       time.ANSIC,
+			UnixDate:    time.UnixDate,
+			RubyDate:    time.RubyDate,
+			RFC822:      time.RFC822,
+			RFC822Z:     time.RFC822Z,
+			RFC850:      time.RFC850,
+			RFC1123:     time.RFC1123,
+			RFC1123Z:    time.RFC1123Z,
+			RFC3339:     time.RFC3339,
+			RFC3339Nano: time.RFC3339Nano,
+			Kitchen:     time.Kitchen,
+			Stamp:       time.Stamp,
+			StampMilli:  time.StampMilli,
+			StampMicro:  time.StampMicro,
+			StampNano:   time.StampNano,
+			DateTime:    time.DateTime,
+			DateOnly:    time.DateOnly,
+			TimeOnly:    time.TimeOnly,
+		}
+	},
 }
 
 func tmplFuncSignature(key string, fn any) string {
@@ -29,14 +52,18 @@ func tmplFuncSignature(key string, fn any) string {
 		return ""
 	}
 	signature := key + " "
-	for i := 0; i < fnType.NumIn(); i++ {
-		if i > 0 {
-			signature += ", "
+
+	if fnType.NumIn() > 0 {
+		for i := 0; i < fnType.NumIn(); i++ {
+			if i > 0 {
+				signature += ", "
+			}
+			argType := fnType.In(i)
+			signature += argType.String()
 		}
-		argType := fnType.In(i)
-		signature += argType.String()
+		signature += " "
 	}
-	signature += " (returns "
+	signature += "(returns "
 	for i := 0; i < fnType.NumOut(); i++ {
 		if i > 0 {
 			signature += ", "
@@ -53,7 +80,7 @@ func enumFunctions() string {
 	for k, fn := range additionalFunctions {
 		out = append(out, tmplFuncSignature(k, fn))
 	}
-	return strings.Join(out, ", ")
+	return strings.Join(out, "\n")
 }
 
 func gotmpl(valuesJson, fileToTemplate, outputFile string) error {

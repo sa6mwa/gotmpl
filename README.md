@@ -58,5 +58,5 @@ go install github.com/sa6mwa/gotmpl@latest
 
 # or use the Makefile...
 
-make install
+make && sudo make install
 ```
